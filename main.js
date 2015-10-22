@@ -1,19 +1,31 @@
-var gith = require('gith').create(9001);
-var express = require('express');
-var app = express();
+var http = require('http');
+var createHandler = require('github-webhook-handler');
+var handler = createHandler({
+    path: 'CarlosSaraiva/HelloGraph',
+    secret: '1234'
+});
+var Router = require("node-simple-router");
+var router = Router();
 var messages = [];
 
-app.get('/', function (req, res) {
-    res.json(messages);
+router.get('/', function (req, res) {
+    res.end(JSON.stringify(messages));
 });
 
-var server = app.listen(80, funcion() {
-    console.log("Server started!");
-})
+http.createServer(router, function (req, res) {
+    handler(req, res, function (err) {
+        res.statusCode = 404;
+        res.end('no such location');
+    });
+}).listen(process.env.PORT || '3001');
 
-gith({
-    repo: 'carlossaraiva/hellograph'
-}).on('all', function (payload) {
-    messages.push(payload);
-    console.log('Post-receive happened!');
+handler.on('error', function (err) {
+    console.error('Error:', err.message);
+});
+
+handler.on('*', function (event) {
+    console.log('Received a push event for %s to %s',
+        event.payload.repository.name,
+        event.payload.ref);
+    messages.push(event);
 });

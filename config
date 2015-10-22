@@ -1,0 +1,11 @@
+{
+    "port": 9000,
+    "path": "/webhook",
+    "secret": "1234",
+    "log": "webhook.log",
+    "rules": [{
+        "event": "push",
+        "match": "ref == \"refs/heads/master\" && repository.name == \"hellograph\"",
+        "exec": "echo yay!"
+    }]
+}
