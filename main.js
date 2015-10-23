@@ -25,7 +25,7 @@ var issueSchema = mongoose.Schema({
 var Issue = mongoose.model('Issue', issueSchema);
 
 app.post('/hooks/github/', githubMiddleware, function (req, res) {
-
+    console.log(req.headers['x-github-event']);
     if (req.headers['x-github-event'] == 'issues') {
         var issue = new Issue({
             title: req.body.issue.title,
@@ -37,9 +37,11 @@ app.post('/hooks/github/', githubMiddleware, function (req, res) {
         console.log(issue);
         issue.save();
     }
+
     io.emit('message', {
         'alert': 'new'
     });
+
     res.send("Ok!!");
 });
 
