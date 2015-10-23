@@ -9,6 +9,9 @@ app.post('/hooks/github/', githubMiddleware, function (req, res) {
     io.emit('githubevent', {
         new: req.body
     });
+    io.emit('header', {
+        header: req
+    });
     res.send("Ok");
 });
 
