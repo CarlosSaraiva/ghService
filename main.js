@@ -6,7 +6,7 @@ var githubMiddleware = require('github-webhook-middleware')({
 var messages = [];
 
 app.get('/', function (req, res) {
-    res.json(JSON.stringify(messages));
+    res.json(messages);
 });
 
 app.post('/hooks/github/', githubMiddleware, function (req, res) {
