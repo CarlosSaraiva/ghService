@@ -1,31 +1,24 @@
-var http = require('http');
-var createHandler = require('github-webhook-handler');
-var handler = createHandler({
-    path: 'CarlosSaraiva/HelloGraph',
+var express = require('express');
+var app = express();
+var githubMiddleware = require('github-webhook-middleware')({
     secret: '1234'
 });
-var Router = require("node-simple-router");
-var router = Router();
 var messages = [];
 
-router.get('/', function (req, res) {
-    res.end(JSON.stringify(messages));
+app.get('/', function (req, res) {
+    res.json(JSON.stringify(messages));
 });
 
-http.createServer(router, function (req, res) {
-    handler(req, res, function (err) {
-        res.statusCode = 404;
-        res.end('no such location');
-    });
-}).listen(process.env.PORT || '3001');
+app.post('/hooks/github/', githubMiddleware, function (req, res) {
+    var payload = req.body,
+        repo = payload.repository.full_name,
+        branch = payload.ref.split('/').pop();
 
-handler.on('error', function (err) {
-    console.error('Error:', err.message);
+    messages.push(payload);
 });
 
-handler.on('*', function (event) {
-    console.log('Received a push event for %s to %s',
-        event.payload.repository.name,
-        event.payload.ref);
-    messages.push(event);
+var server = app.listen((process.env.PORT || '3001'), function () {
+    var host = server.address().address;
+    var port = server.address().port;
+    console.log('Server listening: //%s:%s', host, port);
 });
