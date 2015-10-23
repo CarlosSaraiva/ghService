@@ -7,7 +7,8 @@ var githubMiddleware = require('github-webhook-middleware')({
 
 app.post('/hooks/github/', githubMiddleware, function (req, res) {
     io.emit('githubevent', {
-        new: req.headers
+        header: req.headers,
+        body: req.body
     });
     res.send("Ok!!");
 });
