@@ -11,38 +11,24 @@ var db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function (callback) {
-    console.log('mongo connected');
+    console.log('Mongo connected');
 });
 
-var issueSchema = mongoose.Schema({
-    title: String,
-    state: String,
-    login: String,
-    update: String,
-    link: String
+var eventSchema = mongoose.Schema({}, {
+    strict: false
 });
 
-var Issue = mongoose.model('Issue', issueSchema);
+var Event = mongoose.model('Event', eventSchema);
 
 app.post('/hooks/github/', githubMiddleware, function (req, res) {
-    console.log(req.headers['x-github-event']);
-    if (req.headers['x-github-event'] == 'issues') {
-        var issue = new Issue({
-            title: req.body.issue.title,
-            state: req.body.issue.state,
-            login: req.body.issue.user.login,
-            update: req.body.issue.updated_at,
-            link: req.body.issue.html_url
-        });
-        console.log(issue);
-        issue.save();
-    }
+    var event = new Event({
+        action: req.headers['x-github-event'],
+        request: req.body,
+    }).save();
 
-    io.emit('message', {
-        'alert': 'new'
-    });
-
-    res.send("Ok!!");
+    console.log(event);
+    io.emit('newItem', {});
+    res.send("New " + event.action + " has been added!");
 });
 
 server.listen((process.env.PORT || '3001'), function () {
