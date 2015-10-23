@@ -9,7 +9,7 @@ app.post('/hooks/github/', githubMiddleware, function (req, res) {
     io.emit('githubevent', {
         new: req
     });
-    res.send("Ok");
+    res.send("Ok!!");
 });
 
 server.listen((process.env.PORT || '3001'), function () {
