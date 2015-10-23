@@ -34,6 +34,7 @@ app.post('/hooks/github/', githubMiddleware, function (req, res) {
             update: req.body.issue.updated_at,
             link: req.body.issue.html_url
         });
+        console.log(issue);
         issue.save();
     }
     io.emit('message', {
