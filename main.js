@@ -5,18 +5,9 @@ var githubMiddleware = require('github-webhook-middleware')({
     secret: '1234'
 });
 
-var counter = 0;
-var messages = [];
-
-app.get('/', function (req, res) {
-    res.json(messages);
-});
-
 app.post('/hooks/github/', githubMiddleware, function (req, res) {
-    messages.push(req.body);
-    counter++;
     io.emit('githubevent', {
-        new: true
+        new: req.body
     });
     res.send("Ok");
 });
