@@ -10,11 +10,8 @@ app.get('/', function (req, res) {
 });
 
 app.post('/hooks/github/', githubMiddleware, function (req, res) {
-    var payload = req.body,
-        repo = payload.repository.full_name,
-        branch = payload.ref.split('/').pop();
-
-    messages.push(payload);
+    messages.push(req.body);
+    res.send("Ok");
 });
 
 var server = app.listen((process.env.PORT || '3001'), function () {
