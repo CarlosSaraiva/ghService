@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var Event = require('../models/event.js');
-var cotacao;
 var githubMiddleware = require('github-webhook-middleware')({
     secret: '1234'
 });

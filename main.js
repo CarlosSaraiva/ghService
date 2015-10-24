@@ -5,7 +5,7 @@ var db = require('./services/database.js');
 
 //Routes
 var githubRoute = require('./routes/github.js');
-app.use('/hooks/github', githubRoute);
+app.use('/github', githubRoute);
 
 //Server and IO initialization
 server.listen((process.env.PORT || '3001'), function () {
