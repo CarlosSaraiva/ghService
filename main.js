@@ -19,7 +19,11 @@ io.on('connection', function (socket) {
     'use strict';
     console.log(socket);
     socket.emit('newuser', {
-        message: "Hello Stranger!"
+        message: "Hello Stranger!",
+        id: socket.id,
+        ip: socket.handshake.headers['x-forwarded-for'],
+        port: socket.handshake.headers['x-forwarded-port'],
+        timestamp: socket.handshake.time
     });
     console.log("Usuário conectado!");
 });

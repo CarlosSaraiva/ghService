@@ -13,8 +13,9 @@ module.exports = function (io) {
             request: req.body,
         });
         event.save();
-        io.emit('newItem', {});
-        console.log(event);
+        io.emit('newItem', {
+            item: req.headers['x-github-event']
+        });
         res.send("New " + event.action + " has been added!");
     });
     return router;
