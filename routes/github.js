@@ -5,15 +5,17 @@ var githubMiddleware = require('github-webhook-middleware')({
     secret: '1234'
 });
 
-router.post('/', githubMiddleware, function (req, res) {
-    var event = new Event({
-        action: req.headers['x-github-event'],
-        request: req.body,
+module.exports = function (io) {
+    'use strict';
+    router.post('/', githubMiddleware, function (req, res) {
+        var event = new Event({
+            action: req.headers['x-github-event'],
+            request: req.body,
+        });
+        event.save();
+        io.emit('newItem', {});
+        console.log(event);
+        res.send("New " + event.action + " has been added!");
     });
-    event.save();
-    io.emit('newItem', {});
-    console.debug(event);
-    res.send("New " + event.action + " has been added!");
-});
-
-module.exports = router;
+    return router;
+};
