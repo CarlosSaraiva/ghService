@@ -18,5 +18,15 @@ module.exports = function (io) {
         });
         res.send("New " + event.action + " has been added!");
     });
+
+    router.get('/', function (req, res) {
+        var query = Event.find({});
+        query.exec(function (err, all) {
+            if (err) return err;
+            res.json(all);
+        });
+
+    });
+
     return router;
 };

@@ -5,7 +5,9 @@ var db = require('./services/database.js');
 
 //Routes
 var githubRoute = require('./routes/github.js')(io);
+var actionRoute = require('./routes/action.js');
 app.use('/github', githubRoute);
+app.use('/action', actionRoute);
 
 //Server and IO initialization
 server.listen((process.env.PORT || '3001'), function () {
@@ -17,7 +19,6 @@ server.listen((process.env.PORT || '3001'), function () {
 
 io.on('connection', function (socket) {
     'use strict';
-    console.log(socket);
     socket.emit('newuser', {
         message: "Hello Stranger!",
         id: socket.id,
