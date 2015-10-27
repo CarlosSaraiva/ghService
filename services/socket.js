@@ -1,3 +1,5 @@
+var Event = require('../models/event.js');
+
 module.exports = function (server) {
     var io = require("socket.io")(server);
 
