@@ -15,11 +15,19 @@ module.exports = function (io) {
         });
 
         event.save();
+
         io.emit('newItem', {
             item: req.headers['x-github-event'],
             count: count
         });
-        io.count();
+
+        Event.groupBy('action', function (result) {
+            io.emit('onDbCount', {
+                groupBy: result
+            });
+            console.log('onDbCount triggered');
+        });
+
         res.send("New " + event.action + " has been added!");
     });
 
