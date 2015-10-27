@@ -8,26 +8,6 @@ var githubMiddleware = require('github-webhook-middleware')({
 module.exports = function (io) {
     'use strict';
 
-    var count = (function () {
-        var db = Event.aggregate([{
-            $group: {
-                _id: '$action',
-                count: {
-                    $sum: 1
-                }
-            }
-        }], function (err, result) {
-            if (err) {
-                io.emit('onError', err);
-            } else {
-                io.emit('onDbCount', {
-                    groupBy: result
-                });
-                console.log('onDbCount triggered');
-            }
-        });
-    })();
-
     router.post('/', githubMiddleware, function (req, res) {
         var event = new Event({
             action: req.headers['x-github-event'],
@@ -39,7 +19,7 @@ module.exports = function (io) {
             item: req.headers['x-github-event'],
             count: count
         });
-
+        io.count();
         res.send("New " + event.action + " has been added!");
     });
 
@@ -49,7 +29,6 @@ module.exports = function (io) {
             if (err) return err;
             res.json(all);
         });
-
     });
 
     return router;
