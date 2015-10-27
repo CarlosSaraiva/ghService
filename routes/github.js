@@ -20,7 +20,9 @@ module.exports = function (io) {
             if (err) {
                 io.emit('onError', err);
             } else {
-                io.emit('onDbCount', result);
+                io.emit('onDbCount', {
+                    groupBy: result
+                });
                 console.log('onDbCount triggered');
             }
         });
