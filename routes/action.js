@@ -8,7 +8,6 @@ router.get('/issues', function (req, res) {
     });
 
     query.exec(function (err, issues) {
-        console.log(issues.length);
         res.json(issues);
     });
 });
