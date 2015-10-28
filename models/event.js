@@ -5,22 +5,42 @@ var eventSchema = new Schema({}, {
     strict: false
 });
 
-eventSchema.statics.groupBy = function groupBy(key, callback) {
-    this.aggregate([{
-        $group: {
-            _id: '$action',
-            count: {
-                $sum: 1
+eventSchema.statics.countEventsGroups = function countEventsGroups() {
+    "use strict";
+    var that = this;
+    return new Promise(function (resolve, reject) {
+        that.aggregate([{
+            $group: {
+                _id: '$action',
+                count: {
+                    $sum: 1
+                }
             }
-        }
-    }], function (err, result) {
-        if (err) {
-            console.log(err);
-        } else {
-            callback(result);
-        }
-    });
+        }], function (err, count) {
+            if (err) {
+                reject(err);
+            } else {
+                console.log('countEventsGroups succceded!');
+                resolve(count);
+            }
+        });
 
+    });
+};
+
+eventSchema.statics.dbSaveEvent = function dbSaveEvent(event) {
+    'use strict';
+    return new Promise(function (resolve, reject) {
+        event.save(function (err) {
+            if (!err) {
+                console.log('dbSaveEvent succceded!');
+                resolve();
+            } else {
+                reject(err);
+            }
+        });
+
+    });
 };
 
 module.exports = mongo.model('Event', eventSchema);

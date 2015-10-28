@@ -2,26 +2,27 @@ var Event = require('../models/event.js');
 
 module.exports = function (server) {
     var io = require("socket.io")(server);
+    var listeners = [];
 
-    var count = function () {
-        var db = Event.aggregate([{
-            $group: {
-                _id: '$action',
-                count: {
-                    $sum: 1
-                }
-            }
-        }], function (err, result) {
-            if (err) {
-                io.emit('onError', err);
-            } else {
-                io.emit('onDbCount', {
-                    groupBy: result
-                });
-                console.log('onDbCount triggered');
-            }
+    io.emitIO = function (event, data) {
+        return new Promise(function (resolve, reject) {
+            io.emit(event, JSON.stringify(data));
+            console.log('Event \'' + event + '\' emited.');
+            resolve(true);
         });
     };
+
+    io.on('teste', function (data) {
+        console.log('Event \'' + 'test' + '\' received.');
+    });
+
+    io.on('onnewrequest', function (data) {
+        console.log('Event \'' + 'onnewrequest' + '\' received.');
+    });
+
+    io.on('ondbgroupby', function (data) {
+        console.log('Event \'' + 'ondbgroupby' + '\' received.');
+    });
 
     io.on('connection', function (socket) {
         'use strict';
@@ -32,9 +33,7 @@ module.exports = function (server) {
             port: socket.handshake.headers['x-forwarded-port'],
             timestamp: socket.handshake.time
         });
-        count();
         console.log("Usuário conectado!");
     });
-
     return io;
 };

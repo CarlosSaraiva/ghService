@@ -1,4 +1,5 @@
 var express = require('express');
+var payload = require('./payload.js');
 var router = express.Router();
 var Event = require('../models/event.js');
 var githubMiddleware = require('github-webhook-middleware')({
@@ -10,24 +11,26 @@ module.exports = function (io) {
 
     router.post('/', githubMiddleware, function (req, res) {
         var event = new Event({
-            action: req.headers['x-github-event'],
-            request: req.body,
+            action: 'issues',
+            request: req.body
         });
 
-        event.save();
-
-        io.emit('newItem', {
-            item: req.headers['x-github-event']
-        });
-
-        Event.groupBy('action', function (result) {
-            io.emit('onDbCount', {
-                groupBy: result
+        Event.dbSaveEvent(event)
+            .then(function () {
+                return io.emitIO('onnewrequest', req);
+            })
+            .then(function () {
+                return Event.countEventsGroups(this);
+            })
+            .then(function (actionsCount) {
+                io.emitIO('ondbgroupby', actionsCount);
+            })
+            .catch(function (err) {
+                console.log(err);
             });
-            console.log('onDbCount triggered');
-        });
 
         res.send("New " + event.action + " has been added!");
+
     });
 
     router.get('/', function (req, res) {

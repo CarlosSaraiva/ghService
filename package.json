@@ -9,7 +9,7 @@
   },
   "engines": {
     "node": "0.10.x",
-    "npm": "3.1.x"
+    "npm": "4.2.x"
   },
   "author": "Carlos Saraiva <carlos.saraiva@msn.com>",
   "license": "ISC",
