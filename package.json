@@ -15,9 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "cycle": "^1.0.3",
-    "cyclejs": "^0.24.1",
     "express": "^4.13.3",
-    "github-webhook": "^1.1.2",
     "github-webhook-middleware": "0.0.2",
     "mongoose": "^4.2.2",
     "node-simple-router": "^0.4.7",
