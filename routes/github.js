@@ -17,14 +17,10 @@ module.exports = function (io) {
 
         Event.dbSaveEvent(event)
             .then(function () {
-                return io.emitIO('onnewrequest', req);
+                return io.event('onnewrequest', req);
             })
             .then(function () {
-                return Event.countEventsGroups(this);
-            })
-            .then(function (actionsCount) {
-                console.log(actionsCount);
-                io.emitIO('ondbgroupby', actionsCount);
+                io.event('ondbgroupby', req);
             })
             .catch(function (err) {
                 console.log(err);
