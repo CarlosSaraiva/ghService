@@ -5,7 +5,7 @@ var Event = require('../models/event.js');
 router.get('/counter', function (req, res) {
     Event.countEventsGroups()
         .then(function (counter) {
-            res.json(counter);
+            res.json(JSON.stringify(counter));
         })
         .catch(function (err) {
             console.log(err);

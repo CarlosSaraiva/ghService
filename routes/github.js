@@ -23,6 +23,7 @@ module.exports = function (io) {
                 return Event.countEventsGroups(this);
             })
             .then(function (actionsCount) {
+                console.log(actionsCount);
                 io.emitIO('ondbgroupby', actionsCount);
             })
             .catch(function (err) {
