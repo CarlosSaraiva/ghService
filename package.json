@@ -8,8 +8,8 @@
     "start": "node main.js"
   },
   "engines": {
-    "node": "0.10.x",
-    "npm": "4.2.x"
+    "node": "4.2.x",
+    "npm": "3.3.6"
   },
   "author": "Carlos Saraiva <carlos.saraiva@msn.com>",
   "license": "ISC",
