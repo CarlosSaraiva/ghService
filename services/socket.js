@@ -13,9 +13,9 @@ module.exports = function (server) {
         });
     };
 
-    // io.on('teste', function (data) {
-    //     console.log('Event \'' + 'test' + '\' received.');
-    // });
+    io.on('teste', function (data) {
+        console.log('Event \'' + 'test' + '\' received.');
+    });
 
     // io.on('onnewrequest', function (data) {
     //     console.log('Event \'' + 'onnewrequest' + '\' received.');
